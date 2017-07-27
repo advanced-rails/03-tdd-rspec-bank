@@ -8,7 +8,13 @@ class Account
         @balance = 0
         @transactions = []
     end
-    
+
+    def fee(amount)
+        @balance -= amount
+        t = Transaction.new(:fee, amount)
+        @transactions << t
+    end
+
     def deposit(amount)
         @balance += amount
         t = Transaction.new(:deposit, amount)
@@ -19,12 +25,10 @@ class Account
         if amount <= @balance
             @balance -= amount
             t = Transaction.new(:withdraw, amount)
+            @transactions << t
         else
-            @balance -= 50
-            t = Transaction.new(:fee, 50)
+            self.fee(50)
         end
-
-        @transactions << t
     end
     
     def filter_transactions(type = nil)

@@ -7,6 +7,20 @@ class Customer
         @accounts = []
     end
     
+    def transfer(amount, from, to)
+        src = self.find_account(from)
+        dst = self.find_account(to)
+        
+        if amount > src.balance
+            src.fee(50)
+        else
+            fee = [amount * 0.10, 25].min
+            total = amount + fee
+            src.withdraw(total)
+            dst.deposit(amount)
+        end
+    end
+    
     def num_accounts
         @accounts.size
     end

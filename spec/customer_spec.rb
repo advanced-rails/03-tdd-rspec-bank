@@ -34,4 +34,30 @@ describe Customer do
             expect(a.type).to eql(:savings)
         end
     end
+
+    describe '#transfer' do
+        it 'should transfer from checking to savings when funds exist' do
+            sara = Customer.new('sara jones')
+            sara.add_account(:checking)
+            sara.add_account(:savings)
+            checking = sara.find_account(:checking)
+            savings = sara.find_account(:savings)
+            checking.deposit(300)
+            sara.transfer(70, :checking, :savings)
+            expect(checking.balance).to eql(223.0)
+            expect(savings.balance).to eql(70)
+        end
+
+        it 'should not transfer and charge $50 fee from checking when funds do not exist' do
+            sara = Customer.new('sara jones')
+            sara.add_account(:checking)
+            sara.add_account(:savings)
+            checking = sara.find_account(:checking)
+            savings = sara.find_account(:savings)
+            checking.deposit(3)
+            sara.transfer(70, :checking, :savings)
+            expect(checking.balance).to eql(-47)
+            expect(savings.balance).to eql(0)
+        end
+    end
 end
